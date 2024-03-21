@@ -1,0 +1,4 @@
+Input file: /input/5d8v.pdb
+Remove water: True
+Remove HETATM: True
+Split chains: True
