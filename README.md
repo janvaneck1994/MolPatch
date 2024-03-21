@@ -27,10 +27,10 @@ You need to store the PDB files you want to process in the `input` folder.
 
 Here's what each command option does:
 
--i: The input pdb file to run MolPatch on
--rh: Removes water molecules from the PDB file.
--rhetm: Removes heteroatoms from the PDB file.
--sc: Splits the PDB file into individual chains before assigning the hydrophobic patch.
+- i: The input pdb file to run MolPatch on
+- rh: Removes water molecules from the PDB file.
+- rhetm: Removes heteroatoms from the PDB file.
+- sc: Splits the PDB file into individual chains before assigning the hydrophobic patch.
 
 ### Usage
 
