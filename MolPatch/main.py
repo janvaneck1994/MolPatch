@@ -32,16 +32,24 @@ def main():
 
         output_dir = "/output/" + pdb_id
         os.makedirs(output_dir, exist_ok=True)
-        
-        preprocessed_pdbs = preprocess(infile=input_file, 
-                                    output_dir=output_dir, 
-                                    split_chains=split_chains, 
-                                    remove_hetatm=remove_hetm, 
-                                    remove_hoh=remove_hoh
-                                    )
+        preprocessed_pdbs = []
 
+        try:
+            preprocessed_pdbs = preprocess(infile=input_file, 
+                                        output_dir=output_dir, 
+                                        split_chains=split_chains, 
+                                        remove_hetatm=remove_hetm, 
+                                        remove_hoh=remove_hoh
+                                        )
+        except:
+            print(f"Unable to preprocess {filename}")
+
+        
         for file in preprocessed_pdbs:
-            calculate_patches(infile=file, residues=residues, plot=False, output_dir=output_dir)
+            try:
+                calculate_patches(infile=file, residues=residues, plot=False, output_dir=output_dir)
+            except:
+                print(f"Unable to calculate {file}")
 
 if __name__ == "__main__":
     main()
