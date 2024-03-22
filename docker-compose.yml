@@ -9,7 +9,7 @@ services:
       - ./output:/output
     command: 
       -i
-      5d8v.pdb
+      5d8v2.pdb
       -rh
       -rhetm
       -sc
