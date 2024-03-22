@@ -17,7 +17,6 @@ services:
       - ./input:/input
       - ./output:/output
     command: 
-      5d8v2.pdb
       -rh
       -rhetm
       -sc
@@ -27,7 +26,6 @@ You need to store the PDB files you want to process in the `input` folder.
 
 Here's what each command option does:
 
-- i: The input pdb file to run MolPatch on
 - rh: Removes water molecules from the PDB file.
 - rhetm: Removes heteroatoms from the PDB file.
 - sc: Splits the PDB file into individual chains before assigning the hydrophobic patch.
@@ -40,7 +38,7 @@ Run the following command to start MolPatch:
 docker-compose -f "docker-compose.yml" up
 ```
 
-This will preprocess the PDB file and output the results into the `output` folder.
+This will preprocess the PDB file(s) and output the results into the `output` folder.
 
 ## Output
 

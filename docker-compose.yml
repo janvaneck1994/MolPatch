@@ -8,8 +8,6 @@ services:
       - ./input:/input
       - ./output:/output
     command: 
-      -i
-      5d8v.pdb
       -rh
       -rhetm
       -sc
