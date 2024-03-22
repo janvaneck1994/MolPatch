@@ -35,7 +35,7 @@ Here's what each command option does:
 Run the following command to start MolPatch:
 
 ```
-docker-compose -f "docker-compose.yml" up
+docker compose -f "docker-compose.yml" up -d --build
 ```
 
 This will preprocess the PDB file(s) and output the results into the `output` folder.
