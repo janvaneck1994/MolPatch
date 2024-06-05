@@ -8,6 +8,11 @@ services:
       - ./input:/input
       - ./output:/output
     command: 
-      -rh
-      -rhetm
-      -sc
+      [
+        "-rh",
+        "-rhetm",
+        "-sc",
+        "-alpha",
+        "-plt", "70",
+        "-mpl", "5"
+      ]

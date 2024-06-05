@@ -9,13 +9,20 @@ def main():
 
     parser.add_argument("-rh", "--remove-hoh", action="store_true", help="Remove water (HOH) molecules")
     parser.add_argument("-rhetm", "--remove_hetm", action="store_true", help="Remove HETM molecules")
-    parser.add_argument("-sc", "--split-chains", action="store_true", help="Split chains into separate files")
+    parser.add_argument("-sc", "--split_chains", action="store_true", help="Split chains into separate files")
+    parser.add_argument("-alpha", "--alphafold", default=False, action="store_true", help="Input is Alphafold prediction")
+    parser.add_argument("-plt", "--plddt_threshold", default=65, type=float, help="The local confidence threshold")
+    parser.add_argument("-mpl", "--minimum_plddt", default=5, type=int, help="Minimum residues with a lower plDDT than the set threshold")
+
 
     args = parser.parse_args()
 
     remove_hoh = args.remove_hoh
     remove_hetm = args.remove_hetm
     split_chains = args.split_chains
+    plddt_threshold = args.plddt_threshold
+    minimum_plddt = args.minimum_plddt
+    alphafold = args.alphafold
 
     residues = ["A","C","F","I","L","M","V","W","Y"]
 
@@ -39,7 +46,10 @@ def main():
                                         output_dir=output_dir, 
                                         split_chains=split_chains, 
                                         remove_hetatm=remove_hetm, 
-                                        remove_hoh=remove_hoh
+                                        remove_hoh=remove_hoh,
+                                        plddt_threshold=plddt_threshold,
+                                        minimum_plddt=minimum_plddt,
+                                        alphafold=alphafold
                                         )
         except:
             print(f"Unable to preprocess {filename}")

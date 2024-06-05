@@ -1,0 +1,4 @@
+Input file: /input/AF-Q8W3K0-F1-model_v4.pdb
+Remove water: True
+Remove HETATM: True
+Split chains: True
