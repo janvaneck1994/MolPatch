@@ -148,10 +148,13 @@ def preprocess(infile, output_dir, remove_hoh=True, remove_hetatm=True, split_ch
     if type(preprocessed_pdb) == str:
         preprocessed_pdb = [preprocessed_pdb]
 
+    new_preprocessed_pdb = []
+
     for file in preprocessed_pdb:
         if alphafold:
             file = filter_residues_by_plddt(file, plddt_threshold, minimum_plddt)
         file_name = os.path.basename(file)
         shutil.copy(file, os.path.join(output_dir, "processed_" + file_name))
+        new_preprocessed_pdb.append(file)
 
-    return preprocessed_pdb
+    return new_preprocessed_pdb
