@@ -26,7 +26,7 @@ def calculate_patches(infile, residues, plot, output_dir):
 
     pd.DataFrame(result_dict).to_csv(os.path.join(output_dir, "patches_" + outfile), index=False)
 
-    if plot:
-        outfig = infile.split('.')[0] + '.png'
+    if True:
+        outfig = output_dir + '/' + infile.split('.')[0] + '.png'
         proteinPatches.plot_largest_patches(outfig)
     

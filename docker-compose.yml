@@ -4,6 +4,8 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
+    shm_size: 12g
+    ipc: host
     volumes:
       - ./input:/input
       - ./output:/output
@@ -12,7 +14,7 @@ services:
         "-rh",
         "-rhetm",
         "-sc",
-        "-alpha",
-        "-plt", "70",
-        "-mpl", "5"
+        # "-alpha",
+        # "-plt", "70",
+        # "-mpl", "5"
       ]

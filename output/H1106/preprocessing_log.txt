@@ -1,0 +1,4 @@
+Input file: /input/H1106.pdb
+Remove water: True
+Remove HETATM: True
+Split chains: True

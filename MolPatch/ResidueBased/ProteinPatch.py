@@ -6,6 +6,12 @@ from scipy.spatial import KDTree
 from Bio.SeqUtils import seq1
 import networkx as nx
 import numpy as np
+from xvfbwrapper import Xvfb
+from pyvirtualdisplay import Display
+display = Display(visible=0, size=(2560, 2048))
+display.start()
+from mayavi import mlab
+mlab.options.offscreen = True
 
 class ProteinPatch():
 
@@ -116,3 +122,48 @@ class ProteinPatch():
         vectors = [atom.get_vector().get_array() for atom in atoms]
         center = np.array(vectors).mean(axis=0)
         return center
+    
+    def plot_largest_patches(self, outfile):
+        """
+        Plot the largest patch
+        """
+
+        largest_patch = self.largest_patch()
+        print('largest_patch',largest_patch.size())
+        #change color of largest patch
+        for node in self.G.nodes:
+            if self.G.nodes[node]['closest_residue_id'] in largest_patch.get_ids():
+                self.G.nodes[node]['selected'] = 2
+
+        #plot the graph
+        xyz = np.array([self.G.nodes[v]['surface_vector_pos'] for v in sorted(self.G)])
+        # scalar colors
+        scalars = np.array([int(self.G.nodes[node]['selected']) for node in self.G.nodes]) + 2
+
+        #display.start()
+        fig = mlab.figure(1, bgcolor=(1.0,1.0,1.0))
+        #mlab.clf()
+        print('fig init')
+        pts = mlab.points3d(xyz[:, 0], xyz[:, 1], xyz[:, 2],
+                            scalars,
+                            scale_factor=0.25,
+                            scale_mode='none',
+                            resolution=20,
+                            colormap='coolwarm', figure=fig)
+
+        pts.mlab_source.dataset.lines = np.array(list(self.G.edges()))
+        tube = mlab.pipeline.tube(pts, tube_radius=0.05, figure=fig)
+        mlab.pipeline.surface(tube,colormap='Reds', figure=fig)
+        #mlab.process_ui_events()
+        f = mlab.gcf()
+        f.scene._lift()
+        #imgmap = mlab.screenshot(figure=fig, mode='rgba', antialiased=True)
+        #mlab.close()
+        #mlab.show()
+        mlab.savefig(outfile, figure=fig, size=(2560,3000))#, transparent=True, bbox_inches='tight')
+        mlab.close()
+        #display.stop()
+        #fig2 = plt.figure(figsize=(10, 15))
+        #plt.imshow(imgmap)#, zorder=4)
+        #plt.plot(np.arange(0, 480), np.arange(480, 0, -1), 'r-')
+        #plt.savefig(outfile, transparent=True, bbox_inches='tight')
