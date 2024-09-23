@@ -1,0 +1,4 @@
+Input file: /input/1a9b.pdb
+Remove water: True
+Remove HETATM: True
+Split chains: True

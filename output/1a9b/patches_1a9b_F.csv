@@ -1,0 +1,5 @@
+patch_rank,protein_id,residue_id,chain,residue_type,patch_size
+0,1a9b,4,F,L,304
+0,1a9b,6,F,I,304
+1,1a9b,9,F,Y,276
+2,1a9b,1,F,L,216
