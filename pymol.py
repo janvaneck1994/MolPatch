@@ -1,6 +1,7 @@
 import csv
 import argparse
 from pymol import cmd, finish_launching
+import sys
 
 def parse_csv(csv_file):
     patch_rank_0 = []
@@ -39,14 +40,11 @@ def color_residues(pdb_file, csv_file):
     cmd.show("surface", "structure")
 
 def main():
-    parser = argparse.ArgumentParser(description='Color residues in a PDB file based on a CSV file')
-    parser.add_argument('pdb_file', type=str, help='Path to the PDB file')
-    parser.add_argument('csv_file', type=str, help='Path to the CSV file')
+    pdb_file = sys.argv[1]
+    csv_file = sys.argv[2]
 
-    args = parser.parse_args()
-    
     finish_launching()  # Initialize PyMOL
-    color_residues(args.pdb_file, args.csv_file)
+    color_residues(pdb_file, csv_file)
     cmd.save('output.pse')  # Save the session to an output file if needed
 
 if __name__ == '__main__':

@@ -1,7 +1,6 @@
-import chimera
 from chimera import runCommand
 import csv
-import argparse
+import sys
 
 def parse_csv(csv_file):
     patch_rank_0 = []
@@ -33,13 +32,7 @@ def color_residues(pdb_file, csv_file):
     runCommand('wait')
 
 def main():
-    parser = argparse.ArgumentParser(description='Color residues in a PDB file based on a CSV file')
-    parser.add_argument('pdb_file', type=str, help='Path to the PDB file')
-    parser.add_argument('csv_file', type=str, help='Path to the CSV file')
-
-    args = parser.parse_args()
-    
-    color_residues(args.pdb_file, args.csv_file)
+    color_residues(sys.argv[1], sys.argv[2])
 
 if __name__ == '__main__':
     main()

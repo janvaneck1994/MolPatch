@@ -56,3 +56,7 @@ After running MolPatch, you will find the following output files in the `output`
 ## Contributing
 
 Feel free to contribute to MolPatch by submitting bug reports, feature requests, or pull requests to the GitHub repository.
+
+## Run Chimera visualization
+
+/Applications/Chimera.app/Contents/Resources/bin/chimera --script 'chimera.py <pdb_file> <csv_file>'
