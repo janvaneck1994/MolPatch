@@ -4,6 +4,19 @@ from ResidueBased.residue_based_molpatch import calculate_patches
 from preprocessing import preprocess
 import os
 
+def search_copyright_notice(file_path):
+    """Search for the copyright notice in a PDB or CIF file."""
+    
+    target_string = "ALPHAFOLD DATA"
+    
+    with open(file_path, 'r') as file:
+        for line in file:
+            if target_string in line:
+                return True
+
+    print("Copyright notice not found.")
+    return False
+
 def main():
     parser = argparse.ArgumentParser(description="Process input file for residue-based molpatch")
 
@@ -22,8 +35,8 @@ def main():
     input_dir = "/input/"
 
     for input in os.listdir(input_dir):
-        if not input.endswith('.pdb'):
-            print(f"File is not a PDB file: {input}")
+        if not (input.endswith('.pdb') or input.endswith('.cif')):
+            print(f"File is not a PDB or CIF file: {input}")
             continue
 
         input_file = os.path.join(input_dir, input)
@@ -33,6 +46,8 @@ def main():
         output_dir = "/output/" + pdb_id
         os.makedirs(output_dir, exist_ok=True)
         preprocessed_pdbs = []
+
+        alphafold_file = search_copyright_notice(input_file)
 
         try:
             preprocessed_pdbs = preprocess(infile=input_file, 
@@ -47,7 +62,7 @@ def main():
         
         for file in preprocessed_pdbs:
             try:
-                calculate_patches(infile=file, residues=residues, plot=False, output_dir=output_dir)
+                calculate_patches(infile=file, residues=residues, plot=False, output_dir=output_dir, alphafold=alphafold_file)
             except:
                 print(f"Unable to calculate {file}")
 

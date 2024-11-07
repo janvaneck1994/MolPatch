@@ -54,13 +54,12 @@ def preprocess_split_chains(input_file_path):
 
     temp_dir = tempfile.mkdtemp()
     pdb_id = os.path.splitext(os.path.basename(input_file_path))[0]
+    ext = '.pdb'
 
     if input_file_path.endswith('.pdb'):
         parser = PDBParser(QUIET=1)
-        ext = '.pdb'
     elif input_file_path.endswith('.cif'):
         parser = MMCIFParser(QUIET=1)
-        ext = '.cif'
 
     structure = parser.get_structure(pdb_id, input_file_path)
     chains = structure.get_chains()
@@ -77,7 +76,6 @@ def preprocess_split_chains(input_file_path):
 
     return output_files
 
-
 def preprocess(infile, output_dir, remove_hoh=True, remove_hetatm=True, split_chains=False):
 
     log_file = os.path.join(output_dir, 'preprocessing_log.txt')
@@ -86,7 +84,7 @@ def preprocess(infile, output_dir, remove_hoh=True, remove_hetatm=True, split_ch
         f.write(f'Remove water: {remove_hoh}\n')
         f.write(f'Remove HETATM: {remove_hetatm}\n')
         f.write(f'Split chains: {split_chains}\n')
-
+        
     preprocessed_pdb = infile
 
     if remove_hetatm:

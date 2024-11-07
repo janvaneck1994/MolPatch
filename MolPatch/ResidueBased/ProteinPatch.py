@@ -9,11 +9,8 @@ import numpy as np
 
 class ProteinPatch():
 
-    def __init__(self, id, file, residues_in_patch, r=1.25, msms='msms -density 1.5'):
-        if file.endswith('.pdb'):
-            parser = PDBParser()    
-        elif file.endswith('.cif'):
-            parser = MMCIFParser()
+    def __init__(self, id, file, residues_in_patch, alphafold=False, r=1.25, msms='msms -density 1.5'):
+        parser = PDBParser()    
         structure = parser.get_structure(id, file)
         self.model = structure[0]
         self.r = r
@@ -25,6 +22,20 @@ class ProteinPatch():
         self.G = self.dot_cloud_graph()
         self.G = self.patch_network(self.G)
         self.patches = self.create_patches()
+        self.plddt = {}
+        if alphafold:
+            b_factors = {}
+            for chain in self.model:
+                for residue in chain:
+                    residue_id = (chain.id, residue.id[1], residue.resname)  # (Chain ID, Residue Number, Residue Name)
+                    b_factors[residue_id] = []  # Initialize list to store B-factors for each residue
+                    
+                    for atom in residue:
+                        b_factors[residue_id].append(atom.bfactor)
+
+            for residue, b_factor_list in b_factors.items():
+                avg_b_factor = sum(b_factor_list) / len(b_factor_list) if b_factor_list else None
+                self.plddt[(residue[0], (' ', residue[1], ' '))] = avg_b_factor    
 
     def dot_cloud_graph(self):
         """
