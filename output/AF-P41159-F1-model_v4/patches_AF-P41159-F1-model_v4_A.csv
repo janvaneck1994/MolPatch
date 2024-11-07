@@ -1,0 +1,6 @@
+patch_rank,protein_id,residue_id,chain,residue_type,patch_size
+0,AF-P41159-F1-model,12,A,L,953
+0,AF-P41159-F1-model,11,A,W,953
+0,AF-P41159-F1-model,9,A,F,953
+0,AF-P41159-F1-model,10,A,L,953
+0,AF-P41159-F1-model,13,A,W,953
