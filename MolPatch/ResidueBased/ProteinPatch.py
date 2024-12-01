@@ -19,10 +19,8 @@ class ProteinPatch():
         self.msms = msms
         self.residues_in_patch = residues_in_patch
         self.dssp_dict, self.dssp_dict_keys =  dssp_dict_from_pdb_file(file)
-        self.G = self.dot_cloud_graph()
-        self.G = self.patch_network(self.G)
-        self.patches = self.create_patches()
         self.plddt = {}
+        self.alphafold = alphafold
         if alphafold:
             b_factors = {}
             for chain in self.model:
@@ -36,6 +34,9 @@ class ProteinPatch():
             for residue, b_factor_list in b_factors.items():
                 avg_b_factor = sum(b_factor_list) / len(b_factor_list) if b_factor_list else None
                 self.plddt[(residue[0], (' ', residue[1], ' '))] = avg_b_factor    
+        self.G = self.dot_cloud_graph()
+        self.G = self.patch_network(self.G)
+        self.patches = self.create_patches()
 
     def dot_cloud_graph(self):
         """
@@ -51,7 +52,12 @@ class ProteinPatch():
         surface_points = get_surface(self.model, MSMS=self.msms)
         residue_list = [r for r in Selection.unfold_entities(self.model, "R") if seq1(r.get_resname()) != 'X']
         center_vectices = [self._sidechain_center(r.get_atoms()) for r in residue_list]
-
+        average_b_factors = []
+        for residue in residue_list:
+            b_factors = [atom.get_bfactor() for atom in residue.get_atoms()]
+            avg_b_factor = sum(b_factors) / len(b_factors) if b_factors else 0  # Handle empty atoms list gracefully
+            average_b_factors.append(avg_b_factor)
+        
         T = KDTree(center_vectices)
 		
         closest_residues = T.query(surface_points, k=1)[1]
@@ -61,7 +67,10 @@ class ProteinPatch():
             G.add_node(node)
             G.nodes[node]['selected'] = 0
             closest_residue = residue_list[closest_residues[node]]
-            if seq1(closest_residue.get_resname()) in self.residues_in_patch:
+            if self.alphafold:
+                if seq1(closest_residue.get_resname()) in self.residues_in_patch and average_b_factors[closest_residues[node]] > 70:
+                    G.nodes[node]['selected'] = 1
+            elif seq1(closest_residue.get_resname()) in self.residues_in_patch:
                 G.nodes[node]['selected'] = 1
             G.nodes[node]['surface_vector_pos'] = coordinates
             G.nodes[node]['closest_residue_id'] = closest_residue.get_full_id()
