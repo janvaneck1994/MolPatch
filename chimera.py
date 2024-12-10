@@ -1,6 +1,7 @@
 from chimera import runCommand
 import csv
 import sys
+import math
 
 def parse_csv(csv_file):
     """
@@ -17,6 +18,42 @@ def parse_csv(csv_file):
                 patch_rank_0.append(residue_spec)
 
     return patch_rank_0, all_residues
+
+def is_alphafold(csv_file):
+    """
+    Determines whether the given CSV file corresponds to an AlphaFold model.
+    
+    Criteria:
+        - The CSV must contain a 'plddt' column.
+        - At least one 'plddt' value must be a valid float (not 'nan').
+    
+    Parameters:
+        csv_file (str): Path to the CSV file.
+    
+    Returns:
+        bool: True if the CSV is from an AlphaFold model, False otherwise.
+    """
+    with open(csv_file, 'r') as file:
+        reader = csv.DictReader(file)
+        
+        # Check if 'plddt' column exists
+        if 'plddt' not in reader.fieldnames:
+            return False
+        
+        # Iterate through each row to find valid 'plddt' values
+        for row in reader:
+            plddt = row.get('plddt', 'nan').strip()
+            if plddt.lower() == 'nan' or plddt == '':
+                continue  # Invalid or missing 'plddt' value
+            try:
+                plddt_value = float(plddt)
+                if not math.isnan(plddt_value):
+                    return True  # Found at least one valid 'plddt' value
+            except ValueError:
+                continue  # Non-numeric 'plddt' value
+        
+    # If no valid 'plddt' values were found
+    return False
 
 def parse_pdb_b_factors(pdb_file):
     """
@@ -49,7 +86,6 @@ def color_residues(pdb_file, csv_file):
     Colors residues based on information from the CSV and PDB files.
     """
     patch_rank_0, all_residues = parse_csv(csv_file)
-    low_b_factor = parse_pdb_b_factors(pdb_file)
     
     runCommand('open {}'.format(pdb_file))
     runCommand('color blue')
@@ -62,9 +98,10 @@ def color_residues(pdb_file, csv_file):
     for residue in patch_rank_0:
         runCommand('color red :{}'.format(residue))
 
-    # Color residues with low B-factors from PDB
-    for residue in low_b_factor:
-        runCommand('color yellow :{}'.format(residue))
+    if is_alphafold(csv_file):
+        low_b_factor = parse_pdb_b_factors(pdb_file)
+        for residue in low_b_factor:
+            runCommand('color yellow :{}'.format(residue))
     
     runCommand('surface')
     runCommand('~ribbon')
