@@ -7,11 +7,11 @@ import os
 def search_copyright_notice(file_path):
     """Search for the copyright notice in a PDB or CIF file."""
     
-    target_string = "ALPHAFOLD DATA"
+    target_string = "ALPHAFOLD"
     
     with open(file_path, 'r') as file:
         for line in file:
-            if target_string in line:
+            if target_string in line.upper():
                 return True
 
     print("Copyright notice not found.")

@@ -1,4 +1,0 @@
-Input file: /input/1ax8.pdb
-Remove water: True
-Remove HETATM: True
-Split chains: True
