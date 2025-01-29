@@ -1,0 +1,4 @@
+Input file: /input/leptin_af_truncated.cif
+Remove water: True
+Remove HETATM: True
+Split chains: True
