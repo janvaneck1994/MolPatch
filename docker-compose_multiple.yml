@@ -5,9 +5,10 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./input:/input
+      - ./input_multiple:/input
       - ./output:/output
     command: 
       -rh
       -rhetm
       -sc
+      -pf 0

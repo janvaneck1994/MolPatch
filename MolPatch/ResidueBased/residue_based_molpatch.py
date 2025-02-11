@@ -2,14 +2,13 @@ import pandas as pd
 import os
 from ResidueBased.ProteinPatch import ProteinPatch
 
-def calculate_patches(infile, residues, plot, output_dir, alphafold):
+def calculate_patches(infile, residues, plot, output_dir, alphafold, plddt_filter):
     """ Calculate patches on a protein surface """
 
     filename = os.path.basename(infile)
     outfile = filename.split('.')[0] + '.csv'
     pdb_id = filename.split('.')[0].split('_')[0]
-
-    proteinPatches = ProteinPatch(pdb_id,infile, residues, alphafold)
+    proteinPatches = ProteinPatch(pdb_id, infile, residues, alphafold, plddt_filter)
     patches = proteinPatches.patches
     
     result_dict = {'patch_rank':[], 'protein_id':[], 'residue_id':[], 'chain':[], 'residue_type':[], 'patch_size':[], 'asa':[], 'plddt':[]}

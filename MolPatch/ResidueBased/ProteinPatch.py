@@ -9,10 +9,11 @@ import numpy as np
 
 class ProteinPatch():
 
-    def __init__(self, id, file, residues_in_patch, alphafold=False, r=1.25, msms='msms -density 1.5'):
+    def __init__(self, id, file, residues_in_patch, alphafold=False, plddt_filter = 0, r=1.25, msms='msms -density 1.5'):
         parser = PDBParser()    
         structure = parser.get_structure(id, file)
         self.model = structure[0]
+        self.plddt_filter = plddt_filter
         self.r = r
         if not msms.startswith('msms'):
             msms = 'msms ' + msms
@@ -68,7 +69,7 @@ class ProteinPatch():
             G.nodes[node]['selected'] = 0
             closest_residue = residue_list[closest_residues[node]]
             if self.alphafold:
-                if seq1(closest_residue.get_resname()) in self.residues_in_patch and average_b_factors[closest_residues[node]] > 70:
+                if seq1(closest_residue.get_resname()) in self.residues_in_patch and average_b_factors[closest_residues[node]] > self.plddt_filter:
                     G.nodes[node]['selected'] = 1
             elif seq1(closest_residue.get_resname()) in self.residues_in_patch:
                 G.nodes[node]['selected'] = 1

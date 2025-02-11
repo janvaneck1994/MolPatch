@@ -1,0 +1,14 @@
+version: '3'
+services:
+  molpatch:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./input_single:/input
+      - ./output:/output
+    command: 
+      -rh
+      -rhetm
+      -sc
+      -pf 75
